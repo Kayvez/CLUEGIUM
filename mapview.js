@@ -347,7 +347,7 @@
     }
 
     // ---- evidenziazioni cliccabili ----
-    setHighlights(h) {
+    setHighlights(h, passive) {
       this.gHi.replaceChildren(); this.gHit.replaceChildren();
       if (!h) return;
       for (const k of h.tiles || []) {
@@ -355,14 +355,14 @@
         this.gHi.append(s('rect', { x: x + 0.08, y: y + 0.08, width: 0.84, height: 0.84, rx: 0.2, fill: '#3fe08a', opacity: 0.55, class: 'pulse', stroke: '#fff', 'stroke-width': 0.06 }));
         const hit = s('rect', { x, y, width: 1, height: 1, fill: 'rgba(0,0,0,0)', class: 'hit' });
         hit.addEventListener('click', () => this.opts.onTile && this.opts.onTile(x, y));
-        this.gHit.append(hit);
+        if (!passive) this.gHit.append(hit);
       }
       for (const id of h.rooms || []) {
         const r = D.room(id);
         this.gHi.append(s('rect', { x: r.x, y: r.y, width: r.w, height: r.h, fill: 'rgba(63,224,138,.18)', stroke: '#3fe08a', 'stroke-width': 0.28, class: 'pulse', 'pointer-events': 'none' }));
         const hit = s('rect', { x: r.x, y: r.y, width: r.w, height: r.h, fill: 'rgba(0,0,0,0)', class: 'hit' });
         hit.addEventListener('click', () => this.opts.onRoom && this.opts.onRoom(id));
-        this.gHit.append(hit);
+        if (!passive) this.gHit.append(hit);
       }
     }
   }

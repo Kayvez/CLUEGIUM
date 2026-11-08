@@ -3,7 +3,7 @@
   const D = window.CDATA, { h, avatar, card, die, post, toast, fmtTime } = window.UI;
   const $ = (s) => document.querySelector(s);
   let S = null, token = localStorage.getItem('collegio-token') || '', es = null, tab = 'play', mv = null, skew = 0;
-  let lastTurnPid = null, seenCardKey = '', notes = {}, selSugg = { s: null, w: null }, selAcc = { s: null, w: null, r: null }, unread = 0;
+  let autoSugKey = '', lastTurnPid = null, seenCardKey = '', notes = {}, selSugg = { s: null, w: null }, selAcc = { s: null, w: null, r: null }, unread = 0;
 
   const myNotesKey = () => 'collegio-notes-' + (S && S.me ? S.me.id : '') + '-' + (S ? S.created || '' : '');
   function loadNotes() { try { notes = JSON.parse(localStorage.getItem(myNotesKey()) || '{}'); } catch (e) { notes = {}; } }
@@ -12,7 +12,7 @@
   function connect() {
     if (es) es.close();
     es = new EventSource('/events?' + (token ? 'token=' + token : 'role=spec'));
-    es.onmessage = (e) => { const first = !S; S = JSON.parse(e.data); skew = S.now - Date.now(); if (first || (S.me && !Object.keys(notes).length)) loadNotes(); onState(); render(); };
+    es.onmessage = (e) => { const first = !S; S = JSON.parse(e.data); skew = S.now - Date.now(); if (first || (S.me && !Object.keys(notes).length)) loadNotes(); onState(); render(); maybeRules(); };
     es.onerror = () => { if (es.readyState === 2 && token) { localStorage.removeItem('collegio-token'); token = ''; S = null; connect(); } };
   }
   const act = async (type, extra) => { const r = await post('/api/act', Object.assign({ token, type }, extra || {})); if (!r.ok) toast(r.error || 'Errore'); return r; };
@@ -20,12 +20,22 @@
   const psusp = (id) => { const p = S.players.find((x) => x.id === id); return p ? p.suspect : null; };
   const myPos = () => (S.me && S.pawns && S.pawns[S.me.suspect]) || null;
 
+  function maybeRules() {
+    if (!S || !S.me || localStorage.getItem('collegio-rules-seen')) return;
+    localStorage.setItem('collegio-rules-seen', '1');
+    UI.rulesModal();
+  }
   function onState() {
     if (!S.me || S.status !== 'playing') return;
     const pid = S.turn ? S.turn.pid : null;
     if (pid && pid !== lastTurnPid) {
       if (pid === S.me.id) { try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch (e) { /* */ } tab = 'play'; selSugg = { s: null, w: null }; }
       lastTurnPid = pid;
+    }
+    const t = S.turn;
+    if (t && t.pid === S.me.id && t.moved && !t.suggested && S.phase === 'turn' && S.my && S.my.canSuggest) {
+      const k = S.turnCount + ':' + (S.pawns[S.me.suspect] || {}).r;
+      if (k !== autoSugKey) { autoSugKey = k; setTimeout(openSuggest, 700); }
     }
     const sg = S.suggestion;
     if (sg && sg.card) {
@@ -42,6 +52,7 @@
     if (!S) { m.replaceChildren(h('div', { class: 'box' }, 'Mi collego…')); return; }
     if (!S.me) return renderJoin(m);
     if (S.status === 'lobby') return renderLobby(m);
+    if (S.phase === 'intro') return renderIntroPhone(m);
     if (tab === 'play') renderPlay(m);
     else if (tab === 'cards') renderCards(m);
     else if (tab === 'notes') renderNotes(m);
@@ -54,11 +65,11 @@
     const myTurn = S.turn && S.turn.pid === S.me.id;
     const cur = S.turn ? S.players.find((p) => p.id === S.turn.pid) : null;
     t.replaceChildren(avatar(S.me.suspect, 44), h('div', { class: 'who' }, S.me.name, h('small', {}, D.suspect(S.me.suspect).name + (S.me.out ? ' · fuori dalla caccia' : ''))),
-      h('div', { class: 'rt' }, S.status === 'playing' ? (myTurn ? h('span', { class: 'status-pill' }, '⭐ Tocca a te') : cur ? h('span', { class: 'mini' }, 'Tocca a ' + cur.name) : '') : null, S.curfewAt && S.status === 'playing' ? h('div', { class: 'mini', id: 'cd' }, '') : null));
+      h('div', { class: 'rt' }, h('button', { class: 'btn small ghost', style: 'padding:6px 10px;margin-bottom:4px', onclick: () => UI.rulesModal() }, '❓ Regole'), h('br'), S.status === 'playing' ? (myTurn ? h('span', { class: 'status-pill' }, '⭐ Tocca a te') : cur ? h('span', { class: 'mini' }, 'Tocca a ' + cur.name) : '') : null, S.curfewAt && S.status === 'playing' ? h('div', { class: 'mini', id: 'cd' }, '') : null));
   }
   function renderTabs() {
     const n = $('#tabs');
-    if (!S || !S.me || S.status === 'lobby') { n.style.display = 'none'; return; }
+    if (!S || !S.me || S.status === 'lobby' || S.phase === 'intro') { n.style.display = 'none'; return; }
     n.style.display = '';
     const T = [['play', '🎭', 'Gioco'], ['cards', '🃏', 'Carte'], ['notes', '📝', 'Taccuino'], ['map', '🗺️', 'Mappa']];
     n.replaceChildren(...T.map(([k, ic, nm]) => h('button', { class: tab === k ? 'on' : '', onclick: () => { tab = k; render(); } }, h('span', {}, ic), nm, k === 'cards' && S.me.gossips.length ? h('i', { class: 'badge' }, S.me.gossips.length) : null)));
@@ -73,6 +84,18 @@
     else kids.push(h('div', { class: 'box stack' }, h('div', { style: 'font-weight:800' }, 'La partita è già cominciata. Sei tu una di loro?'),
       S.players.map((p) => h('button', { class: 'roomb', disabled: p.connected, onclick: async () => { const r = await post('/api/claim', { id: p.id }); if (!r.ok) return toast(r.error); token = r.token; localStorage.setItem('collegio-token', token); S = null; connect(); } }, avatar(p.suspect, 40), h('div', {}, p.name, h('small', {}, p.connected ? 'già collegata' : D.suspect(p.suspect).name))))));
     m.replaceChildren(...kids);
+  }
+
+  function renderIntroPhone(m) {
+    const ready = S.intro && S.intro.ready.includes(S.me.id);
+    const n = S.intro ? S.intro.ready.length : 0;
+    const cards = h('div', { class: 'cards flipin' }, S.me.cards.map((k, i) => { const c = card(k); c.style.animationDelay = (0.4 + i * 0.22) + 's'; return c; }));
+    m.replaceChildren(
+      h('div', { class: 'box paper', style: 'text-align:center' }, h('div', { style: 'font-size:54px' }, '🔒'), h('h2', {}, 'La busta è sigillata'), h('p', { style: 'font-weight:800;margin:0' }, 'Dentro ci sono le 3 carte del mistero. Queste sono LE TUE carte: quindi NON sono nella busta. Non mostrarle a nessuna!')),
+      cards,
+      ready ? h('div', { class: 'box', style: 'text-align:center;margin-top:14px;font-weight:800' }, `✅ Sei pronta. Aspetto le altre (${n} su ${S.players.length})…`)
+        : h('button', { class: 'btn big', style: 'margin-top:16px', onclick: () => act('ready') }, 'Sono pronta ✅'),
+      h('button', { class: 'btn ghost', style: 'margin-top:10px;width:100%', onclick: () => UI.rulesModal() }, '📖 Come si gioca'));
   }
 
   function renderLobby(m) {
@@ -135,6 +158,9 @@
     const inRoom = pos && pos.t === 'r';
     const head = h('div', { class: 'box turn stack' });
     head.append(h('div', { class: 'row' }, avatar(S.me.suspect, 56), h('div', {}, h('div', { style: 'font:800 24px var(--serif);color:var(--gold2)' }, 'È il tuo turno!'), h('div', { class: 'mini' }, inRoom ? '📍 ' + D.room(pos.r).name : '📍 In corridoio'))));
+    const step = !t.rolled && !t.moved ? 0 : (t.rolled && !t.moved) ? 1 : (inRoom && !t.suggested && !my.suoraBlock) ? 2 : 3;
+    const HINT = ['Tira i dadi per muoverti. (In una stanza con passaggio segreto puoi usarlo al posto dei dadi.)', `Hai ${t.steps} passi: scegli una stanza qui sotto, oppure un quadratino verde sulla mappa.`, 'Sei in ' + (inRoom ? D.room(pos.r).name : '') + '! Ora fai la tua ipotesi: chi è stato e con cosa.', inRoom ? (t.suggested ? 'Ipotesi fatta. Se sei sicura puoi accusare, altrimenti finisci il turno.' : 'Qui non puoi fare ipotesi. Finisci il turno.') : 'Sei in corridoio: niente ipotesi. Finisci il turno.'];
+    head.append(h('div', { class: 'steps' }, ['🎲 Dadi', '🚶 Muoviti', '🔍 Ipotesi', '✅ Fine'].map((s, i) => h('div', { class: 'st' + (i === step ? ' on' : i < step ? ' done' : '') }, s))), h('div', { class: 'hint' }, HINT[step]));
     if (t.dice) head.append(h('div', { class: 'row', style: 'justify-content:center' }, die(t.dice[0]), die(t.dice[1]), h('span', { class: 'big-n' }, '= ' + t.steps)));
     if (my.canRoll) {
       head.append(h('button', { class: 'btn big', onclick: () => act('roll') }, '🎲 Tira i dadi'));

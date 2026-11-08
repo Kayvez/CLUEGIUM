@@ -10,7 +10,7 @@ let pass = 0; const ok = (c, m) => { assert(c, m); pass++; };
 function mk(n) {
   const g = new Game(rng);
   for (let i = 0; i < n; i++) { const p = g.join('G' + i); ok(g.act(p.id, { type: 'pick', suspect: SUS[i] }).ok, 'pick'); }
-  g.start(); return g;
+  g.start(); g.beginPlay(); return g;
 }
 function bot(g, cap) {
   let steps = 0;
@@ -30,6 +30,16 @@ function bot(g, cap) {
   return steps;
 }
 
+// avvio: si guardano le carte, poi si comincia
+{
+  const g = new Game(rng);
+  for (let i = 0; i < 3; i++) { const p = g.join('X' + i); g.act(p.id, { type: 'pick', suspect: SUS[i] }); }
+  g.start();
+  ok(g.phase === 'intro' && g.view(g.players[0].id).turn === null, 'prima si guardano le carte');
+  ok(!g.act(g.players[0].id, { type: 'roll' }).ok, 'non si gioca durante l\'introduzione');
+  g.players.forEach((p) => g.act(p.id, { type: 'ready' }));
+  ok(g.phase === 'turn' && g.view(g.players[0].id).turn, 'quando tutte sono pronte si comincia');
+}
 // carte e distribuzione
 {
   const g = mk(5);

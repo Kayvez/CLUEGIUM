@@ -162,5 +162,22 @@
       document.body.append(c); setTimeout(() => c.remove(), 8000);
     }
   };
-  window.UI = { h, avatar, portrait, card, die, toast, post, fmtTime, confetti };
+  // schermata "Come si gioca" a pagine
+  const rulesModal = (onClose) => {
+    let i = 0;
+    const R = D.RULES;
+    const wrap = h('div', { class: 'modal', style: 'z-index:70', onclick: (e) => e.target === wrap && close() });
+    const close = () => { wrap.remove(); onClose && onClose(); };
+    const draw = () => {
+      const r = R[i];
+      wrap.replaceChildren(h('div', { class: 'sheet rules' },
+        h('div', { class: 'rpage' }, h('div', { class: 'ricon' }, r.icon), h('div', { class: 'rnum' }, `Regola ${i + 1} di ${R.length}`), h('h2', {}, r.title), h('p', { class: 'rtext' }, r.text), r.tip ? h('div', { class: 'rtip' }, '💡 ' + r.tip) : null),
+        h('div', { class: 'rdots' }, R.map((_, k) => h('span', { class: k === i ? 'on' : '', onclick: () => { i = k; draw(); } }))),
+        h('div', { class: 'row', style: 'display:flex;gap:10px' },
+          h('button', { class: 'btn ghost', style: 'flex:1;color:#4a1626;box-shadow:inset 0 0 0 1.5px #4a1626', disabled: i === 0, onclick: () => { i--; draw(); } }, '◀ Indietro'),
+          i < R.length - 1 ? h('button', { class: 'btn', style: 'flex:1', onclick: () => { i++; draw(); } }, 'Avanti ▶') : h('button', { class: 'btn wine', style: 'flex:1', onclick: close }, 'Ho capito!'))));
+    };
+    draw(); document.body.append(wrap); return close;
+  };
+  window.UI = { rulesModal, h, avatar, portrait, card, die, toast, post, fmtTime, confetti };
 })();

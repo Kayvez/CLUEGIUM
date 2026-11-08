@@ -55,6 +55,7 @@ class Game {
     this.pawns = {};             // sospettato -> posizione {t:'t',x,y} | {t:'r',r}
     this.weapons = {};           // arma -> stanza
     this.solution = null;
+    this.intro = null;
     this.turn = null;            // { i, rolled, dice, steps, moved, suggested, gossiped }
     this.suggestion = null;
     this.suora = 'cucina';
@@ -116,13 +117,28 @@ class Game {
     this.players = this.shuffle(this.players);
     this.suora = this.pick(D.PATROL);
     this.status = 'playing';
-    this.phase = 'turn';
+    this.phase = 'intro';
+    this.intro = { ready: {} };
     this.round = 1;
+    this.turnCount = 0;
+    this.turn = this.freshTurn(0);
+    this.say('start', `Un delitto al collegio: ${D.VICTIM} è stato trovato senza vita! Chi è stato, con cosa e dove?`);
+    this.say('seal', 'Le tre carte del mistero sono nella busta. Ora guardate le vostre carte!');
+    this.ev('intro', {});
+  }
+  beginPlay() {
+    if (this.phase !== 'intro') bad('La partita è già cominciata.');
+    this.phase = 'turn';
     this.turnCount = 1;
     this.turn = this.freshTurn(0);
     if (this.settings.curfew) this.curfewAt = nextCurfew(Date.now(), this.settings.curfewHour);
-    this.say('start', `Un delitto al collegio: ${D.VICTIM} è stato trovato senza vita! Chi è stato, con cosa e dove?`);
     this.say('turn', `Comincia ${this.cur.name}.`);
+    this.ev('begin', { pid: this.cur.id });
+  }
+  do_ready(p) {
+    if (this.phase !== 'intro') bad('Non è il momento.');
+    this.intro.ready[p.id] = true;
+    if (this.players.every((q) => this.intro.ready[q.id])) this.beginPlay();
   }
 
   freshTurn(i) { return { i, rolled: false, dice: null, steps: 0, moved: false, suggested: false, gossiped: false }; }
@@ -405,6 +421,9 @@ class Game {
       this.nextTurn();
       return { ok: true };
     }
+    if (b.type === 'begin') {
+      try { this.beginPlay(); return { ok: true }; } catch (e) { if (e instanceof GameError) return { ok: false, error: e.message }; throw e; }
+    }
     if (b.type === 'start') {
       try { this.start(); return { ok: true }; } catch (e) { if (e instanceof GameError) return { ok: false, error: e.message }; throw e; }
     }
@@ -434,7 +453,8 @@ class Game {
       curfewAt: this.settings.curfew ? this.curfewAt : 0,
       players: this.players.map((p) => ({ id: p.id, name: p.name, suspect: p.suspect, out: p.out, connected: connected.has(p.id), nCards: p.cards.length })),
       pawns: this.pawns, weapons: this.weapons,
-      turn: t && this.status === 'playing' ? { pid: cur.id, rolled: t.rolled, dice: t.dice, steps: t.steps, moved: t.moved, suggested: t.suggested, gossiped: t.gossiped } : null,
+      intro: this.phase === 'intro' && this.intro ? { ready: Object.keys(this.intro.ready) } : null,
+      turn: t && this.status === 'playing' && this.phase !== 'intro' ? { pid: cur.id, rolled: t.rolled, dice: t.dice, steps: t.steps, moved: t.moved, suggested: t.suggested, gossiped: t.gossiped } : null,
       log: this.log.slice(-40), evs: this.evs,
     };
     if (this.suggestion) {
@@ -442,6 +462,10 @@ class Game {
       v.suggestion = { by: sg.by, s: sg.s, w: sg.w, r: sg.r, cur: sg.cur, skipped: sg.skipped, shownBy: sg.shownBy, none: sg.none };
       if (me && me.id === sg.by && sg.card) v.suggestion.card = sg.card;
       if (me && this.phase === 'disprove' && sg.cur === me.id) v.suggestion.canShow = this.matching(me);
+    }
+    if (this.status === 'playing' && this.phase === 'turn' && t && t.rolled && !t.moved && cur && !cur.out) {
+      const rc = this.reach(this.pawnOf(cur), t.steps);
+      v.reach = { tiles: Array.from(rc.tiles.keys()), rooms: Array.from(rc.rooms.keys()) };
     }
     if (this.phase === 'curfew' && this.curfew) v.curfew = { deadline: this.curfew.deadline, done: Object.keys(this.curfew.done) };
     if (this.status === 'ended') { v.result = this.result; if (this.curfew && this.curfew.revealed) v.revealed = this.curfew.revealed; }

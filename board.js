@@ -43,8 +43,59 @@
     $('#lobby').classList.add('hidden'); $('#game').classList.remove('hidden');
     mv.update(S);
     handleEvents();
+    mv.setHighlights(S.reach ? { tiles: S.reach.tiles, rooms: S.reach.rooms } : null, true);
+    if (S.phase === 'intro') { renderIntro(); return; }
     renderSide(); renderOver();
     tick();
+  }
+
+
+  // ---------- introduzione: le 3 carte, la busta, la distribuzione ----------
+  let introNode = null, introKey = '', introTimers = [];
+  function renderIntro() {
+    const o = $('#over');
+    if (introKey !== S.created || !introNode) {
+      introTimers.forEach(clearTimeout); introTimers = [];
+      introKey = S.created; introNode = buildIntro();
+      o.className = ''; o.replaceChildren(introNode);
+      startIntro();
+    } else if (!o.contains(introNode)) { o.className = ''; o.replaceChildren(introNode); }
+    updateIntroReady();
+  }
+  const later = (ms, fn) => introTimers.push(setTimeout(fn, ms));
+  function buildIntro() {
+    const reel = (label, sub, t) => h('div', { class: 'reelcol' }, h('div', { class: 'rlabel' }, label), h('div', { class: 'reel', 'data-t': t }), h('div', { class: 'rsub' }, sub));
+    const players = S.players.map((p) => h('div', { class: 'dp', 'data-id': p.id }, avatar(p.suspect, 62), h('div', { class: 'dn' }, p.name), h('div', { class: 'dc' }, h('b', { class: 'cnt' }, '0'), ' 🃏'), h('div', { class: 'tick' }, '✅')));
+    return h('div', { class: 'intro' },
+      h('div', { class: 'i-title' }, h('div', { class: 'i-eyebrow' }, '🕯️ Un delitto al collegio'), h('h1', {}, D.VICTIM[0].toUpperCase() + D.VICTIM.slice(1) + ' è stato ucciso!'), h('div', { class: 'i-sub' }, 'Tre carte segrete finiscono nella busta: chi, con cosa e dove…')),
+      h('div', { class: 'stage' },
+        h('div', { class: 'reels' }, reel('CHI?', 'il colpevole', 's'), reel('CON COSA?', "l'arma", 'w'), reel('DOVE?', 'il luogo', 'r')),
+        h('div', { class: 'env' }, h('div', { class: 'eback' }), h('div', { class: 'epocket' }), h('div', { class: 'eflap' }), h('div', { class: 'eseal' }, '✝')),
+        h('div', { class: 'sealed' }, '🔒 Il mistero è sigillato!')),
+      h('div', { class: 'deal' }, h('div', { class: 'dtitle' }, 'Ora si distribuiscono le carte'), h('div', { class: 'dps' }, players)),
+      h('div', { class: 'iready' }, h('div', { class: 'itxt' }, '📱 Ognuna guardi le sue carte sul telefono e prema “Sono pronta”'), h('button', { class: 'btn', onclick: () => post('/api/board', { type: 'begin' }) }, 'Iniziamo!')));
+  }
+  function startIntro() {
+    // slot machine: le tre colonne girano e poi si fermano su una carta coperta
+    const stops = { s: 3000, w: 3900, r: 4800 };
+    const pool = { s: D.SUSPECTS.map((x) => 's:' + x.id), w: D.WEAPONS.map((x) => 'w:' + x.id), r: D.ROOMS.map((x) => 'r:' + x.id) };
+    introNode.querySelectorAll('.reel').forEach((el) => {
+      const t = el.dataset.t;
+      let k = Math.floor(Math.random() * 7);
+      const tick = () => { k = (k + 1) % pool[t].length; el.replaceChildren(card(pool[t][k], { size: 'lg' })); el.classList.add('spin'); };
+      later(1400, () => { const iv = setInterval(tick, 85); introTimers.push(iv); later(stops[t] - 1400, () => { clearInterval(iv); el.classList.remove('spin'); el.replaceChildren(card(pool[t][0], { size: 'lg', back: true })); el.classList.add('thump'); }); });
+    });
+    // distribuzione: i contatori salgono
+    S.players.forEach((p, i) => {
+      const el = introNode.querySelector(`.dp[data-id="${p.id}"] .cnt`);
+      let n = 0;
+      later(10200 + i * 160, () => { const iv = setInterval(() => { n++; el.textContent = n; if (n >= p.nCards) clearInterval(iv); }, 150); introTimers.push(iv); });
+    });
+  }
+  function updateIntroReady() {
+    if (!introNode) return;
+    const ready = new Set((S.intro && S.intro.ready) || []);
+    introNode.querySelectorAll('.dp').forEach((el) => el.classList.toggle('ok', ready.has(el.dataset.id)));
   }
 
   function renderLobby() {
@@ -65,38 +116,39 @@
         h('p', {}, `${D.VICTIM[0].toUpperCase() + D.VICTIM.slice(1)} è stato trovato senza vita. Scansiona il QR con il telefono, scegli il tuo personaggio e scopri chi è stato, con cosa e dove.`),
         h('div', { class: 'slots' }, slots),
         waiting.length ? h('p', {}, '✍️ Stanno scegliendo il personaggio: ' + waiting.join(', ')) : null,
-        h('div', { class: 'tools' }, h('button', { class: 'btn', disabled: S.players.length < 2 || S.players.some((p) => !p.suspect), onclick: async () => { const r = await post('/api/board', { type: 'start' }); if (!r.ok) UI.toast(r.error); } }, 'Iniziamo!'),
+        h('div', { class: 'tools' }, h('button', { class: 'btn ghost', onclick: () => UI.rulesModal() }, '📖 Come si gioca'), h('button', { class: 'btn', disabled: S.players.length < 2 || S.players.some((p) => !p.suspect), onclick: async () => { const r = await post('/api/board', { type: 'start' }); if (!r.ok) UI.toast(r.error); } }, 'Iniziamo!'),
           h('span', { class: 'pill' }, S.players.length < 2 ? 'Servono almeno 2 giocatrici' : S.players.length + ' giocatrici · coprifuoco ' + (S.settings.curfew ? 'alle ' + S.settings.curfewHour : 'spento'))))));
   }
 
   function turnLines() {
     const t = S.turn; if (!t) return '';
-    if (S.phase === 'disprove') return 'Qualcuna deve smentire l\'ipotesi…';
-    if (S.phase === 'curfew') return 'Coprifuoco!';
-    if (!t.rolled && !t.moved) return 'Deve tirare i dadi (o usare un passaggio segreto)';
-    if (t.rolled && !t.moved) return 'Ha fatto ' + t.steps + ': sceglie dove andare';
+    if (S.phase === 'disprove') return '🤫 Qualcuna deve smentire l\'ipotesi…';
+    if (S.phase === 'curfew') return '🌙 Coprifuoco!';
+    if (!t.rolled && !t.moved) return '🎲 Deve tirare i dadi (o usare un passaggio segreto)';
+    if (t.rolled && !t.moved) return '🚶 Ha fatto ' + t.steps + ': sceglie dove andare (quadratini verdi)';
     const pw = S.pawns[psusp(t.pid)];
-    if (pw && pw.t === 'r' && !t.suggested) return 'È in ' + D.room(pw.r).name + ': può fare un\'ipotesi';
-    return t.suggested ? 'Ha fatto la sua ipotesi' : 'Sta per finire il turno';
+    if (pw && pw.t === 'r' && !t.suggested) return '🔍 È in ' + D.room(pw.r).name + ': può fare un\'ipotesi';
+    return t.suggested ? '✅ Ha fatto la sua ipotesi: può accusare o finire il turno' : '⏭ Sta per finire il turno';
   }
 
   function renderSide() {
     const side = $('#side');
     const cur = S.turn ? S.players.find((p) => p.id === S.turn.pid) : null;
     const clock = h('div', { class: 'clock' }, S.curfewAt ? [`🌙 coprifuoco ore ${S.settings.curfewHour}`, h('b', { id: 'cd' }, '')] : ['Senza coprifuoco']);
-    const brand = h('div', { class: 'panel brand' }, h('div', {}, h('h1', {}, 'Misteri al Collegio'), h('small', {}, 'giro ' + S.round)), clock);
+    const brand = h('div', { class: 'panel brand' }, h('div', {}, h('h1', {}, 'Misteri al Collegio'), h('small', {}, 'giro ' + S.round + ' · scopri CHI, CON COSA, DOVE')), clock);
     let dice = [];
     if (rolled && S.turn && rolled.pid === S.turn.pid && S.turn.dice) {
       dice = [die(S.turn.dice[0], rolled.fresh), die(S.turn.dice[1], rolled.fresh), h('span', { class: 'sum' }, '= ' + S.turn.steps)];
       rolled.fresh = false;
     } else if (S.turn && S.turn.dice) dice = [die(S.turn.dice[0]), die(S.turn.dice[1]), h('span', { class: 'sum' }, '= ' + S.turn.steps)];
-    const turn = h('div', { class: 'panel' }, cur ? h('div', { class: 'turn' }, avatar(cur.suspect, 76), h('div', {}, h('div', { class: 'sub' }, S.status === 'ended' ? 'Partita finita' : 'Tocca a'), h('div', { class: 'who' }, cur.name), h('div', { class: 'sub' }, D.suspect(cur.suspect).name + ' · ' + turnLines()))) : h('div', { class: 'who serif' }, 'Fine partita'), h('div', { class: 'diceRow' }, dice));
+    const turn = h('div', { class: 'panel' }, cur ? h('div', { class: 'turn' }, avatar(cur.suspect, 76), h('div', {}, h('div', { class: 'sub' }, S.status === 'ended' ? 'Partita finita' : 'Tocca a'), h('div', { class: 'who' }, cur.name), h('div', { class: 'sub' }, D.suspect(cur.suspect).name))) : h('div', { class: 'who serif' }, 'Fine partita'), h('div', { class: 'hintbig' }, S.status === 'ended' ? '' : turnLines()), dice.length ? h('div', { class: 'diceRow' }, dice) : null);
     const plist = h('div', { class: 'panel plist' }, S.players.map((p) => h('div', { class: 'prow' + (cur && p.id === cur.id ? ' cur' : '') + (p.out ? ' out' : '') + (p.connected ? '' : ' off') },
       avatar(p.suspect, 42), h('div', {}, h('div', { class: 'nm' }, h('span', { class: 'dot' }), p.name), h('div', { class: 'ch' }, D.suspect(p.suspect).name)),
       h('div', { class: 'rt' }, p.out ? 'fuori dalla caccia' : '🃏 ' + p.nCards)))); 
-    const log = h('div', { class: 'panel log' }, S.log.slice(-6).reverse().map((l) => h('div', {}, l.text)));
-    const legend = h('div', { class: 'panel legend' }, h('span', {}, '🅐🅑 passaggi segreti (A: Cucina Infernale ↔ Cripta Gelata, B: Sancta Sanctorum ↔ Gran Salone)'), h('span', {}, '👂 pettegolezzi: Portineria, Salotto delle Sorelle, Cappella'), h('span', {}, '🔔 la Suora di ronda blocca le ipotesi nella sua stanza'));
+    const log = h('div', { class: 'panel log' }, S.log.slice(-4).reverse().map((l) => h('div', {}, l.text)));
+    const legend = h('div', { class: 'panel legend' }, h('span', {}, '🅐🅑 passaggi segreti'), h('span', {}, '👂 pettegolezzi'), h('span', {}, '🔔 Suora di ronda: niente ipotesi'), h('span', {}, '🟢 dove può arrivare'));
     const tools = h('div', { class: 'tools' },
+      h('button', { class: 'btn small ghost', onclick: () => UI.rulesModal() }, '📖 Regole'),
       h('button', { class: 'btn small ghost', onclick: () => post('/api/board', { type: 'skip' }).then((r) => !r.ok && UI.toast(r.error)) }, '⏭ Salta turno'),
       h('button', { class: 'btn small ghost', onclick: () => confirm('Far scattare subito il coprifuoco?') && post('/api/board', { type: 'curfewNow' }) }, '🌙 Coprifuoco ora'),
       h('button', { class: 'btn small ghost', onclick: () => confirm('Chiudere questa partita e cominciarne una nuova?') && post('/api/board', { type: 'reset' }) }, '🔄 Nuova partita'));

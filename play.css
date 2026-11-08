@@ -45,3 +45,9 @@ input[type=text]{width:100%;font:800 20px var(--sans);padding:15px 16px;border-r
 .roomb .ic{font-size:28px}.roomb small{display:block;font-weight:700;color:#7a6a58;font-size:12px}
 .roomb:active{transform:translateY(2px);box-shadow:none}
 .status-pill{display:inline-block;padding:4px 12px;border-radius:99px;background:rgba(226,181,89,.25);color:var(--gold2);font-weight:800;font-size:13px}
+
+.steps{display:flex;gap:6px}.st{flex:1;text-align:center;font:800 12px var(--sans);padding:7px 2px;border-radius:12px;background:rgba(255,255,255,.07);color:#8f86a0}
+.st.on{background:linear-gradient(180deg,var(--gold2),var(--gold));color:#2a1a05;box-shadow:0 0 14px rgba(226,181,89,.6)}.st.done{background:rgba(61,154,107,.3);color:#9be0bb}
+.hint{font:800 17px/1.3 var(--sans);color:#fff;background:rgba(226,181,89,.16);border:1px solid rgba(226,181,89,.4);border-radius:14px;padding:11px 13px}
+.flipin .card{animation:flipIn .7s both}
+@keyframes flipIn{from{transform:rotateY(90deg) scale(.6);opacity:0}to{transform:none;opacity:1}}

@@ -56,3 +56,9 @@ body{background-image:radial-gradient(1100px 700px at 50% -10%,#3a1630 0%,rgba(2
 .card{background:linear-gradient(160deg,#fff7e3,#efdfb8);box-shadow:0 2px 0 rgba(0,0,0,.25),0 8px 16px rgba(0,0,0,.4),inset 0 0 0 2px rgba(226,181,89,.45)}
 .card .band{font-family:'Cinzel',serif}
 .prow.cur,.turn.box{box-shadow:0 0 22px rgba(226,181,89,.3)}
+
+.sheet.rules{text-align:center;max-width:460px}
+.rpage{min-height:300px}.ricon{font-size:68px;line-height:1.1}.rnum{font:800 12px var(--sans);letter-spacing:2px;text-transform:uppercase;color:#8a6a3a;margin-top:4px}
+.rtext{font:700 18px/1.4 var(--sans);color:#2a1a20;margin:10px 0}
+.rtip{background:#fff1c9;border-radius:14px;padding:10px 14px;font-weight:800;font-size:14px;color:#6b4a14;margin-top:8px}
+.rdots{display:flex;gap:8px;justify-content:center;margin:12px 0}.rdots span{width:10px;height:10px;border-radius:50%;background:#d9c9a2;cursor:pointer}.rdots span.on{background:var(--wine);transform:scale(1.3)}

@@ -54,6 +54,19 @@
   const STARTS = [[0, 5], [12, 5], [24, 6], [0, 18], [11, 17], [22, 18], [7, 20], [20, 8], [7, 24]];
   const COLS = 31, ROWS = 34;
 
+
+  // Le regole spiegate in modo semplice (usate sul tabellone e sui telefoni)
+  const RULES = [
+    { icon: '🕵️', title: 'Il mistero', text: "L'Ispettore del Ministero è stato ucciso nel collegio! Nella BUSTA ci sono 3 carte segrete: CHI è stato, CON COSA e DOVE. Vince chi le scopre per prima.", tip: 'Le altre carte sono distribuite tra tutte le giocatrici.' },
+    { icon: '🃏', title: 'Le tue carte', text: "Ognuna riceve alcune carte. Se una carta è in mano a qualcuna, NON può essere nella busta. Guardale sul telefono e non farle vedere!", tip: 'Le trovi nella scheda 🃏 Carte e nel 📝 Taccuino.' },
+    { icon: '🎲', title: 'Il tuo turno', text: "Tira i 2 dadi e muoviti di tanti quadratini quanto dice il totale. Non puoi passare sopra le altre pedine. Le stanze si entrano dalle porte marroni.", tip: 'Scegli la stanza dalla lista, oppure tocca un quadratino verde sulla mappa.' },
+    { icon: '🕳️', title: 'Scorciatoie', text: "I passaggi segreti A e B portano da una stanza all'altra al posto dei dadi. Le scale ⬆ portano allo Scriptorium (aula studio) al piano di sopra.", tip: 'A: Cucina Infernale ↔ Cripta Gelata · B: Sancta Sanctorum ↔ Il Gran Salone' },
+    { icon: '🔍', title: "L'ipotesi", text: "Quando sei dentro una stanza, fai un'ipotesi: scegli CHI e CON COSA. Il DOVE è la stanza in cui ti trovi. Sospettata e arma vengono portate lì.", tip: 'Una sola ipotesi per turno, solo dentro una stanza.' },
+    { icon: '🤫', title: 'Smentire', text: "Le altre, a turno, controllano le loro carte: chi ne ha una delle tre te ne mostra UNA, di nascosto. Quella carta NON è nella busta! Se nessuna ha niente… forse hai trovato qualcosa di grosso.", tip: 'Segna tutto sul Taccuino 📝: la soluzione è ciò che nessuno ha.' },
+    { icon: '⚖️', title: "L'accusa finale", text: "Quando sei sicura, premi Accusa e dì CHI, CON COSA e DOVE. Se indovini tutte e tre, VINCI! Se sbagli sei fuori dalla caccia, ma continui a smentire le altre.", tip: "Si accusa una volta sola: pensaci bene!" },
+    { icon: '🔔', title: 'Le novità del collegio', text: "👂 Nelle stanze dei pettegolezzi puoi origliare un indizio… che può essere falso! 🔔 La Suora di ronda blocca le ipotesi nella stanza dove si trova. 🌙 Al coprifuoco (le 23) tutte scrivono in segreto l'accusa finale.", tip: 'Pettegolezzi: Portineria, Salotto delle Sorelle, Cappella del Silenzio.' },
+  ];
+
   const room = (id) => ROOMS.find((r) => r.id === id);
   const suspect = (id) => SUSPECTS.find((s) => s.id === id);
   const weapon = (id) => WEAPONS.find((w) => w.id === id);
@@ -82,5 +95,5 @@
     const r = room(id); return { t, id, name: r.name, icon: r.icon };
   };
 
-  return { TITLE, VICTIM, SUSPECTS, WEAPONS, ROOMS, CORRIDORS, STAIRS, PASSAGES, GOSSIP_ROOMS, PATROL, STARTS, COLS, ROWS, room, suspect, weapon, buildMap, cardKey, cardInfo };
+  return { RULES, TITLE, VICTIM, SUSPECTS, WEAPONS, ROOMS, CORRIDORS, STAIRS, PASSAGES, GOSSIP_ROOMS, PATROL, STARTS, COLS, ROWS, room, suspect, weapon, buildMap, cardKey, cardInfo };
 });

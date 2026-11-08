@@ -3,6 +3,8 @@
 Un tabellone sull'iPad, un telefono per ogni giocatrice (da 2 a 9).
 
 ## Come si gioca
+- All'inizio c'è una breve scena sul tabellone: le 3 carte del mistero girano come in una slot machine, finiscono nella busta che viene sigillata, poi si distribuiscono le carte. Ognuna guarda le sue sul telefono e preme "Sono pronta".
+- Il pulsante ❓ Regole (telefono) e 📖 Regole (tabellone) spiega tutto a pagine.
 - Sull'iPad apri `/board`: compare il QR code. Ogni amica lo scansiona, scrive il nome e sceglie il personaggio. Chi entra per prima (⭐) fa partire la partita.
 - L'Ispettore del Ministero è stato ucciso. Una carta Sospettata, una Arma e un Luogo sono nella busta: nessuno le ha. Le altre carte sono distribuite.
 - Nel tuo turno: **tira i dadi** (2 dadi = passi sui quadratini) e muoviti. Nelle stanze si entra dalle porte.
