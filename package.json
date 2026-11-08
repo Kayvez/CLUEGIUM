@@ -1,0 +1,8 @@
+{
+  "name": "misteri-al-collegio",
+  "version": "1.0.0",
+  "description": "Cluedo in versione collegio: un tabellone sull'iPad e un telefono per ogni giocatrice.",
+  "main": "server.js",
+  "scripts": { "start": "node server.js", "test": "node test.js" },
+  "engines": { "node": ">=18" }
+}
