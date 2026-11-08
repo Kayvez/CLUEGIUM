@@ -95,7 +95,7 @@
       avatar(p.suspect, 42), h('div', {}, h('div', { class: 'nm' }, h('span', { class: 'dot' }), p.name), h('div', { class: 'ch' }, D.suspect(p.suspect).name)),
       h('div', { class: 'rt' }, p.out ? 'fuori dalla caccia' : '🃏 ' + p.nCards)))); 
     const log = h('div', { class: 'panel log' }, S.log.slice(-6).reverse().map((l) => h('div', {}, l.text)));
-    const legend = h('div', { class: 'panel legend' }, h('span', {}, '🅐🅑 passaggi segreti (A: Cucina ↔ Ghiacciaia, B: Ufficio ↔ Sala grande)'), h('span', {}, '👂 pettegolezzi: Reception, Sala TV, Cappella'), h('span', {}, '🔔 la Suora di ronda blocca le ipotesi nella sua stanza'));
+    const legend = h('div', { class: 'panel legend' }, h('span', {}, '🅐🅑 passaggi segreti (A: Cucina Infernale ↔ Cripta Gelata, B: Sancta Sanctorum ↔ Gran Salone)'), h('span', {}, '👂 pettegolezzi: Portineria, Salotto delle Sorelle, Cappella'), h('span', {}, '🔔 la Suora di ronda blocca le ipotesi nella sua stanza'));
     const tools = h('div', { class: 'tools' },
       h('button', { class: 'btn small ghost', onclick: () => post('/api/board', { type: 'skip' }).then((r) => !r.ok && UI.toast(r.error)) }, '⏭ Salta turno'),
       h('button', { class: 'btn small ghost', onclick: () => confirm('Far scattare subito il coprifuoco?') && post('/api/board', { type: 'curfewNow' }) }, '🌙 Coprifuoco ora'),

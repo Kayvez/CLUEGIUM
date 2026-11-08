@@ -7,9 +7,9 @@ Un tabellone sull'iPad, un telefono per ogni giocatrice (da 2 a 9).
 - L'Ispettore del Ministero è stato ucciso. Una carta Sospettata, una Arma e un Luogo sono nella busta: nessuno le ha. Le altre carte sono distribuite.
 - Nel tuo turno: **tira i dadi** (2 dadi = passi sui quadratini) e muoviti. Nelle stanze si entra dalle porte.
 - Dentro una stanza fai un'**ipotesi** (sospettata + arma): vengono portate lì. Le altre, a turno, smentiscono mostrandoti di nascosto UNA carta.
-- **Passaggi segreti** (al posto dei dadi): A Cucina ↔ Ghiacciaia, B Ufficio di Madre Zita ↔ Sala grande.
-- **Scale**: i quadratini con la freccia portano all'Aula studio, al piano di sopra.
-- **Pettegolezzi** (Reception, Sala TV, Cappella): un'indiscrezione privata che può essere vera… o una bugia!
+- **Passaggi segreti** (al posto dei dadi): A Cucina Infernale ↔ Cripta Gelata, B Sancta Sanctorum ↔ Gran Salone.
+- **Scale**: i quadratini con la freccia portano allo Scriptorium (aula studio), al piano di sopra.
+- **Pettegolezzi** (Portineria, Salotto delle Sorelle, Cappella del Silenzio): un'indiscrezione privata che può essere vera… o una bugia!
 - **Suora di ronda**: gira per il collegio; nella stanza dove si trova non si possono fare ipotesi.
 - **Accusa finale**: se indovini tutto vinci; se sbagli sei fuori (ma continui a smentire).
 - **Coprifuoco alle 23:00** (ora di Roma, si può cambiare o spegnere): tutte scrivono in segreto l'accusa finale; chi indovina vince.

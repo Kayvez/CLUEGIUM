@@ -7,11 +7,11 @@
   const VICTIM = "l'Ispettore del Ministero";
 
   const SUSPECTS = [
-    { id: 'zita', name: 'Madre Zita', ini: 'MZ', color: '#7a3b8f' },
-    { id: 'domenica', name: 'Madre Domenica', ini: 'MD', color: '#2e7d4f' },
-    { id: 'antonietta', name: 'Madre Maria Antonietta', ini: 'MA', color: '#2b63b0' },
-    { id: 'graziella', name: 'Madre Graziella', ini: 'MG', color: '#b3362f' },
-    { id: 'anna', name: 'Suor Anna', ini: 'SA', color: '#0f8b8d' },
+    { id: 'zita', name: 'Madre Zita', ini: 'MZ', color: '#b0342f' },
+    { id: 'domenica', name: 'Madre Domenica', ini: 'MD', color: '#2f8052' },
+    { id: 'antonietta', name: 'Madre Maria Antonietta', ini: 'MA', color: '#2d66b5' },
+    { id: 'graziella', name: 'Madre Graziella', ini: 'MG', color: '#dcab22' },
+    { id: 'anna', name: 'Suor Anna', ini: 'SA', color: '#7d4c2b' },
     { id: 'sonia', name: 'Sonia', ini: 'SO', color: '#d17a22' },
     { id: 'romina', name: 'Romina', ini: 'RO', color: '#c2417b' },
     { id: 'elettricista', name: "L'Elettricista", ini: 'EL', color: '#8a7a1c' },
@@ -31,20 +31,20 @@
 
   // x,y,w,h in quadratini. floor = tipo di pavimento (per la grafica)
   const ROOMS = [
-    { id: 'cucina', num: 1, name: 'Cucina', icon: '🍳', floor: 'checker', x: 0, y: 0, w: 6, h: 5, doors: [[2, 5], [3, 5]] },
-    { id: 'lavaggio', num: 2, name: 'Cucina piccola', sub: 'lavaggio piatti', icon: '🫧', floor: 'tiles', x: 6, y: 0, w: 4, h: 5, doors: [[7, 5], [8, 5]] },
-    { id: 'cucinaSuore', num: 3, name: 'Cucina delle suore', icon: '🥘', floor: 'checkerWarm', x: 10, y: 0, w: 8, h: 5, doors: [[13, 5], [14, 5]] },
-    { id: 'pranzoSuore', num: 4, name: 'Pranzo delle suore', icon: '🍷', floor: 'woodDark', x: 18, y: 0, w: 7, h: 5, doors: [[20, 5], [21, 5]] },
-    { id: 'pranzo', num: 5, name: 'Sala da pranzo', sub: 'collegiali', icon: '🍝', floor: 'wood', x: 9, y: 7, w: 11, h: 10, doors: [[8, 11], [8, 12], [20, 11], [20, 12], [12, 6], [13, 6]] },
+    { id: 'cucina', num: 1, name: 'Cucina Infernale', sub: 'la cucina', icon: '🍳', floor: 'checker', x: 0, y: 0, w: 6, h: 5, doors: [[2, 5], [3, 5]] },
+    { id: 'lavaggio', num: 2, name: 'Lavatoio', sub: 'saletta dei piatti', icon: '🫧', floor: 'tiles', x: 6, y: 0, w: 4, h: 5, doors: [[7, 5], [8, 5]] },
+    { id: 'cucinaSuore', num: 3, name: 'Cucina delle Sorelle', sub: 'cucina delle suore', icon: '🥘', floor: 'checkerWarm', x: 10, y: 0, w: 8, h: 5, doors: [[13, 5], [14, 5]] },
+    { id: 'pranzoSuore', num: 4, name: 'Refettorio Sacro', sub: 'pranzo delle suore', icon: '🍷', floor: 'woodDark', x: 18, y: 0, w: 7, h: 5, doors: [[20, 5], [21, 5]] },
+    { id: 'pranzo', num: 5, name: 'Gran Refettorio', sub: 'sala da pranzo', icon: '🍝', floor: 'wood', x: 9, y: 7, w: 11, h: 10, doors: [[8, 11], [8, 12], [20, 11], [20, 12], [12, 6], [13, 6]] },
     { id: 'bagniProib', num: 7, name: 'Bagni proibiti', icon: '🚫', floor: 'tiles', x: 0, y: 7, w: 6, h: 3, doors: [[6, 8]] },
-    { id: 'ufficio', num: 8, name: 'Ufficio di Madre Zita', icon: '📚', floor: 'woodDark', x: 0, y: 10, w: 6, h: 7, doors: [[6, 12], [6, 13]] },
-    { id: 'reception', num: 11, name: 'Reception', icon: '🛎️', floor: 'carpet', x: 0, y: 19, w: 4, h: 3, doors: [[1, 18], [2, 18]] },
-    { id: 'tv', num: 12, name: 'Sala TV delle suore', icon: '📺', floor: 'carpet', x: 0, y: 22, w: 6, h: 5, doors: [[6, 23], [6, 24]] },
-    { id: 'cappella', num: 15, name: 'Cappella', icon: '⛪', floor: 'stone', x: 9, y: 19, w: 9, h: 7, doors: [[8, 21], [8, 22]] },
-    { id: 'salaGrande', num: 13, name: 'Sala grande', icon: '🎭', floor: 'parquet', x: 0, y: 27, w: 19, h: 7, doors: [[6, 26], [7, 26], [8, 26], [19, 30], [19, 31]] },
-    { id: 'ghiacciaia', num: 6, name: 'Ghiacciaia', sub: 'si studia qui', icon: '🧊', floor: 'ice', x: 23, y: 17, w: 8, h: 4, doors: [[22, 17], [22, 18]] },
-    { id: 'bagni', num: 14, name: 'Bagni permessi', icon: '🚻', floor: 'tiles', x: 22, y: 31, w: 7, h: 3, doors: [[21, 32], [21, 33]] },
-    { id: 'aula', num: 16, name: 'Aula studio', sub: 'piano di sopra', icon: '✏️', floor: 'desks', x: 23, y: 22, w: 8, h: 6, doors: [[21, 11], [22, 11], [21, 12], [22, 12]], upstairs: true },
+    { id: 'ufficio', num: 8, name: 'Sancta Sanctorum', sub: 'ufficio di Madre Zita', icon: '📚', floor: 'woodDark', x: 0, y: 10, w: 6, h: 7, doors: [[6, 12], [6, 13]] },
+    { id: 'reception', num: 11, name: 'Portineria', icon: '🛎️', floor: 'carpet', x: 0, y: 19, w: 4, h: 3, doors: [[1, 18], [2, 18]] },
+    { id: 'tv', num: 12, name: 'Salotto delle Sorelle', sub: 'sala TV', icon: '📺', floor: 'carpet', x: 0, y: 22, w: 6, h: 5, doors: [[6, 23], [6, 24]] },
+    { id: 'cappella', num: 15, name: 'Cappella del Silenzio', icon: '⛪', floor: 'stone', x: 9, y: 19, w: 9, h: 7, doors: [[8, 21], [8, 22]] },
+    { id: 'salaGrande', num: 13, name: 'Il Gran Salone', sub: 'sala grande', icon: '🎭', floor: 'parquet', x: 0, y: 27, w: 19, h: 7, doors: [[6, 26], [7, 26], [8, 26], [19, 30], [19, 31]] },
+    { id: 'ghiacciaia', num: 6, name: 'Cripta Gelata', sub: 'la ghiacciaia · si studia qui', icon: '🧊', floor: 'ice', x: 23, y: 17, w: 8, h: 4, doors: [[22, 17], [22, 18]] },
+    { id: 'bagni', num: 14, name: 'Bagni delle Educande', icon: '🚻', floor: 'tiles', x: 22, y: 31, w: 7, h: 3, doors: [[21, 32], [21, 33]] },
+    { id: 'aula', num: 16, name: 'Scriptorium', sub: 'aula studio · piano di sopra', icon: '✏️', floor: 'desks', x: 23, y: 22, w: 8, h: 6, doors: [[21, 11], [22, 11], [21, 12], [22, 12]], upstairs: true },
   ];
   const CORRIDORS = [[0, 5, 25, 2], [6, 7, 3, 10], [20, 7, 3, 10], [0, 17, 23, 2], [6, 19, 3, 8], [19, 29, 3, 5]];
   const STAIRS = [[21, 11], [22, 11], [21, 12], [22, 12]];

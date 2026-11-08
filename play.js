@@ -220,7 +220,7 @@
     const kids = [h('h2', { class: 't' }, 'Le tue carte'), h('p', { class: 'mini' }, 'Queste NON sono nella soluzione. Non mostrarle a nessuno!'), h('div', { class: 'cards' }, S.me.cards.map((k) => card(k)))];
     if (S.me.seen.length) kids.push(h('div', { class: 'grp' }, 'Carte che ti hanno mostrato'), h('div', { class: 'cards' }, S.me.seen.map((x) => h('div', { style: 'text-align:center' }, card(x.k, { size: 'sm' }), h('div', { class: 'mini' }, pname(x.by))))));
     kids.push(h('div', { class: 'grp' }, '👂 Pettegolezzi (non sempre veri!)'));
-    if (!S.me.gossips.length) kids.push(h('div', { class: 'mini' }, 'Nessuno per ora. Vai in Reception, Sala TV o Cappella e ascolta.'));
+    if (!S.me.gossips.length) kids.push(h('div', { class: 'mini' }, 'Nessuno per ora. Vai in Portineria, nel Salotto delle Sorelle o in Cappella e ascolta.'));
     for (const g of S.me.gossips) { const [t, id] = g.k.split(':'); const name = D.cardInfo(g.k).name; kids.push(h('div', { class: 'bubble' }, `«Si mormora che ${t === 's' ? 'il colpevole sia' : t === 'w' ? 'l\'arma sia' : 'il delitto sia avvenuto in'}: ${name}…»`, h('small', {}, 'Sentito in ' + D.room(g.room).name + ' · potrebbe essere una bugia'))); }
     m.replaceChildren(...kids);
   }

@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Nunito:wght@500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;800&family=Playfair+Display:wght@600;800&family=Nunito:wght@500;700;800&display=swap');
 :root{
   --ink:#1a1422; --night:#14182a; --night2:#1d2340; --wine:#6b1f33; --wine2:#8c2c46; --gold:#e2b559; --gold2:#f6dc93;
   --paper:#f6ecd7; --paper2:#eadcbc; --line:#cdb98b; --ok:#3d9a6b; --bad:#c2453d; --mute:#8b8396;
-  --serif:'Playfair Display',Georgia,'Times New Roman',serif; --sans:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --gothic:'Cinzel Decorative','Cinzel',Georgia,serif; --serif:'Playfair Display',Georgia,'Times New Roman',serif; --sans:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;font-family:var(--sans);color:var(--ink);background:var(--night)}
@@ -47,3 +47,12 @@ button{font-family:inherit}
 .card{color:var(--ink)}
 .card .pic{min-height:0}.card .pic svg{max-height:100%}
 .card.sm{width:76px}.card.sm .pic{font-size:24px}.card.sm .nm{font-size:10.5px;min-height:2.4em;padding:0 3px 5px}
+
+body{background-image:radial-gradient(1100px 700px at 50% -10%,#3a1630 0%,rgba(20,24,42,0) 70%)}
+.sheet h2,h2.t,.brand h1,.lob h1,#over h1{font-family:var(--gothic)!important;letter-spacing:.5px}
+.panel,.box{border-color:rgba(226,181,89,.28)!important;background:linear-gradient(180deg,rgba(40,20,44,.72),rgba(18,12,30,.72))!important;box-shadow:0 8px 24px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,220,150,.12)}
+.box.paper{background:linear-gradient(180deg,#fff9ea,var(--paper))!important;border-color:var(--gold)!important}
+.btn{font-family:'Cinzel','Nunito',sans-serif;font-weight:800;letter-spacing:.6px}
+.card{background:linear-gradient(160deg,#fff7e3,#efdfb8);box-shadow:0 2px 0 rgba(0,0,0,.25),0 8px 16px rgba(0,0,0,.4),inset 0 0 0 2px rgba(226,181,89,.45)}
+.card .band{font-family:'Cinzel',serif}
+.prow.cur,.turn.box{box-shadow:0 0 22px rgba(226,181,89,.3)}

@@ -243,7 +243,7 @@ class Game {
   do_gossip(p) {
     this.mustTurn(p);
     const t = this.turn, pos = this.pawnOf(p);
-    if (pos.t !== 'r' || !D.GOSSIP_ROOMS.includes(pos.r)) bad('I pettegolezzi si sentono solo in Reception, nella Sala TV e in Cappella.');
+    if (pos.t !== 'r' || !D.GOSSIP_ROOMS.includes(pos.r)) bad('I pettegolezzi si sentono solo in Portineria, nel Salotto delle Sorelle e nella Cappella.');
     if (t.gossiped) bad('Per oggi hai già origliato.');
     t.gossiped = true;
     const type = this.pick(['s', 'w', 'r']);
