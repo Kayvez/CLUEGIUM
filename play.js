@@ -200,7 +200,7 @@
   // ---------- accuse e ipotesi ----------
   function picker(items, key, sel, onSel, roomLike) {
     return h('div', { class: 'pick' }, items.map((it) => h('button', { class: 'pk' + (sel[key] === it.id ? ' sel' : ''), onclick: () => { sel[key] = it.id; onSel(); } },
-      it.portrait ? avatar(it.id, 40) : h('span', { class: 'ic' }, it.icon), it.name)));
+      it.portrait ? avatar(it.id, 40) : UI.itemIcon(it, 38), it.name)));
   }
   function accuseForm(onGo, label) {
     const box = h('div', { class: 'box paper stack' });
@@ -259,7 +259,7 @@
     const sec = (title, t, items) => [h('div', { class: 'grp' }, title), ...items.map((it) => {
       const k = t + ':' + it.id, locked = inHand.has(k) || seen[k];
       const mk = notes[k] || '';
-      return h('div', { class: 'note' + (locked || mk === 'x' ? ' done' : '') }, h('span', { class: 'ic' }, it.portrait ? avatar(it.id, 30) : it.icon),
+      return h('div', { class: 'note' + (locked || mk === 'x' ? ' done' : '') }, h('span', { class: 'ic' }, it.portrait ? avatar(it.id, 30) : UI.itemIcon(it, 30)),
         h('div', { class: 'nm' }, it.name, inHand.has(k) ? h('span', { class: 'tag' }, 'ce l\'hai in mano') : seen[k] ? h('span', { class: 'tag' }, 'te l\'ha mostrata ' + pname(seen[k])) : goss[k] ? h('span', { class: 'tag' }, '👂 se ne parla…') : null),
         locked ? h('button', { class: 'lock', disabled: true }, inHand.has(k) ? 'MIA' : 'VISTA') : h('button', { class: mk, onclick: () => { notes[k] = MARKS[(MARKS.indexOf(mk) + 1) % MARKS.length]; saveNotes(); render(); } }, MLAB[mk]));
     })];

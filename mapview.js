@@ -254,7 +254,9 @@
       const w = D.weapon(id);
       const g = s('g', { class: 'item' });
       g.append(s('rect', { x: -0.5, y: -0.5, width: 1, height: 1, rx: 0.22, fill: '#fff7e0', stroke: '#7a4a2a', 'stroke-width': 0.08, filter: 'url(#soft)' }));
-      g.append(s('text', { y: 0.27, 'text-anchor': 'middle', 'font-size': 0.78 }, w.icon));
+      const wg = s('g', { transform: `translate(-0.42 -0.42) scale(${0.84 / 64})` });
+      wg.innerHTML = UI.weaponMarkup(id);
+      g.append(wg);
       this.gItems.append(g);
       return g;
     }

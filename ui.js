@@ -124,6 +124,24 @@
       <ellipse cx="32" cy="43" rx="4" ry="6" fill="#12182a"/>
       <circle cx="25.4" cy="25" r="1.4" fill="#9fd0ff"/><circle cx="41.4" cy="25" r="1.4" fill="#9fd0ff"/>`,
   };
+
+  // --- icone delle armi disegnate a mano (viewBox 64) ---
+  const WSVG = {
+    mattarello: `<g transform="rotate(-35 32 32)"><rect x="4" y="27" width="10" height="10" rx="4" fill="#b9793f" stroke="#6b4220" stroke-width="2"/><rect x="50" y="27" width="10" height="10" rx="4" fill="#b9793f" stroke="#6b4220" stroke-width="2"/><rect x="13" y="20" width="38" height="24" rx="6" fill="#e4b479" stroke="#6b4220" stroke-width="2"/><path d="M17 27h30M17 33h30M17 39h30" stroke="#c48a4a" stroke-width="1.4" opacity=".7"/><path d="M18 24h28" stroke="#fff" stroke-width="2" opacity=".35" stroke-linecap="round"/></g>`,
+    ferro: `<path d="M6 46h50c0-12-9-22-21-22H22C13 24 6 33 6 46z" fill="#d7dbe3" stroke="#4d5462" stroke-width="2.2"/><path d="M6 46h50v6H6z" fill="#8c94a4" stroke="#4d5462" stroke-width="2.2"/><path d="M17 25c0-10 6-14 15-14 7 0 11 4 11 11" fill="none" stroke="#2f3440" stroke-width="5.5" stroke-linecap="round"/><circle cx="24" cy="37" r="3" fill="#e0554b"/><path d="M40 34h10M38 40h14" stroke="#aab1bf" stroke-width="2" stroke-linecap="round"/><path d="M12 56q2-4 0-7M22 58q2-4 0-7M32 56q2-4 0-7" stroke="#9ecbf0" stroke-width="2" fill="none" stroke-linecap="round" opacity=".9"/>`,
+    rosario: `<g fill="#8c2c46" stroke="#4a1020" stroke-width="1">${Array.from({ length: 16 }, (_, i) => { const a = (i / 16) * Math.PI * 2 - Math.PI / 2; return `<circle cx="${(32 + Math.cos(a) * 19).toFixed(1)}" cy="${(24 + Math.sin(a) * 17).toFixed(1)}" r="${i % 4 === 0 ? 3.2 : 2.4}" ${i % 4 === 0 ? 'fill="#c9a24a"' : ''}/>`; }).join('')}</g><path d="M32 41v8" stroke="#c9a24a" stroke-width="2"/><g fill="#8c2c46" stroke="#4a1020" stroke-width="1"><circle cx="32" cy="44" r="2.2"/><circle cx="32" cy="49" r="2.2"/></g><path d="M32 52v10M27.5 56h9" stroke="#e2b559" stroke-width="3.6" stroke-linecap="round"/><path d="M32 52v10M27.5 56h9" stroke="#8a6a1a" stroke-width="1" stroke-linecap="round"/>`,
+    scopa: `<path d="M48 4L28 40" stroke="#8a5a2b" stroke-width="4.5" stroke-linecap="round"/><path d="M48 4L28 40" stroke="#c48a4a" stroke-width="1.6" stroke-linecap="round"/><path d="M22 36l18 8-4 16H10z" fill="#e2b559" stroke="#8a6a1a" stroke-width="2" stroke-linejoin="round"/><path d="M16 46l-2 14M22 44l-1 16M28 46l1 14M34 48l3 12" stroke="#b8862b" stroke-width="1.6" stroke-linecap="round"/><path d="M20 38l17 8" stroke="#8a5a2b" stroke-width="3.4" stroke-linecap="round"/>`,
+    candelabro: `<path d="M12 20q0 20 20 20t20-20" fill="none" stroke="#c9a24a" stroke-width="3.4" stroke-linecap="round"/><path d="M32 40v14M22 56h20M26 52h12" stroke="#c9a24a" stroke-width="4" stroke-linecap="round"/><g stroke="#8a6a1a" stroke-width="1"><rect x="9" y="12" width="6" height="12" rx="1" fill="#f4ead2"/><rect x="29" y="8" width="6" height="16" rx="1" fill="#f4ead2"/><rect x="49" y="12" width="6" height="12" rx="1" fill="#f4ead2"/></g><g fill="#ffb02e"><path d="M12 4q-4 4 0 7q4-3 0-7z"/><path d="M32 0q-4 4 0 7q4-3 0-7z"/><path d="M52 4q-4 4 0 7q4-3 0-7z"/></g>`,
+    padella: `<rect x="40" y="29" width="22" height="8" rx="4" fill="#8a5a2b" stroke="#4a2a10" stroke-width="2"/><circle cx="26" cy="34" r="22" fill="#3b4150" stroke="#1d212b" stroke-width="2.4"/><circle cx="26" cy="34" r="16" fill="#555d70"/><path d="M14 26q4-7 12-8" stroke="#fff" stroke-width="2.2" fill="none" opacity=".35" stroke-linecap="round"/>`,
+    coltello: `<path d="M8 50L44 8q10 6 2 22L16 56z" fill="#e3e8ef" stroke="#4d5462" stroke-width="2.2" stroke-linejoin="round"/><path d="M14 50L42 14" stroke="#fff" stroke-width="2" opacity=".7" stroke-linecap="round"/><path d="M42 36l16 16q2 3-1 5l-3 3q-3 2-5-1L33 43z" fill="#7a4a2a" stroke="#3d2412" stroke-width="2.2" stroke-linejoin="round"/><circle cx="46" cy="50" r="1.4" fill="#e2b559"/><circle cx="52" cy="56" r="1.4" fill="#e2b559"/>`,
+    cavo: `<rect x="4" y="22" width="22" height="20" rx="4" fill="#2f3440" stroke="#14171d" stroke-width="2"/><rect x="26" y="26" width="10" height="4" rx="1" fill="#c9ccd4" stroke="#6b7280" stroke-width="1.2"/><rect x="26" y="34" width="10" height="4" rx="1" fill="#c9ccd4" stroke="#6b7280" stroke-width="1.2"/><path d="M4 32H0" stroke="#14171d" stroke-width="0"/><path d="M14 42q-2 14 10 14t12-10 14-6 10 6" fill="none" stroke="#14171d" stroke-width="5" stroke-linecap="round"/><path d="M14 42q-2 14 10 14t12-10 14-6 10 6" fill="none" stroke="#5a6070" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 5"/><path d="M58 46l4-6M58 46l5 2" stroke="#e8a02e" stroke-width="2.4" stroke-linecap="round"/>`,
+    aspirapolvere: `<ellipse cx="26" cy="42" rx="22" ry="14" fill="#c2417b" stroke="#6b1f3f" stroke-width="2.2"/><ellipse cx="26" cy="38" rx="16" ry="7" fill="#e86aa6" opacity=".7"/><circle cx="12" cy="54" r="5" fill="#2f3440" stroke="#14171d" stroke-width="1.6"/><circle cx="40" cy="54" r="5" fill="#2f3440" stroke="#14171d" stroke-width="1.6"/><circle cx="26" cy="44" r="4" fill="#f6dc93" stroke="#8a6a1a" stroke-width="1.4"/><path d="M42 36q12-4 12-18" fill="none" stroke="#3b4150" stroke-width="5" stroke-linecap="round"/><path d="M42 36q12-4 12-18" fill="none" stroke="#6b7280" stroke-width="1.6" stroke-dasharray="2 3" stroke-linecap="round"/><path d="M54 18L44 6" stroke="#aab1bf" stroke-width="4" stroke-linecap="round"/><path d="M38 2h14l-2 6H40z" fill="#2f3440" stroke="#14171d" stroke-width="1.6" stroke-linejoin="round"/>`,
+  };
+  const weaponMarkup = (id) => WSVG[id] || '';
+  const weaponIcon = (id, size) => { const e = h('span', { class: 'wicon', style: size ? `width:${size}px;height:${size}px;display:inline-block` : 'display:inline-block;width:1em;height:1em' }); e.innerHTML = `<svg viewBox="0 0 64 64" width="100%" height="100%">${WSVG[id] || ''}</svg>`; return e; };
+  // icona di un elemento di elenco: arma (disegno) o stanza (emoji)
+  const itemIcon = (it, size) => (it.floor ? h('span', { class: 'ic' }, it.icon) : h('span', { class: 'ic' }, weaponIcon(it.id, size || 30)));
+
   const portrait = (id) => PORTRAIT[id] || '';
   const avatar = (id, size) => {
     const s = D.suspect(id);
@@ -140,7 +158,8 @@
     const e = h('div', { class: 'card ' + t + (opts.size ? ' ' + opts.size : '') + (opts.back ? ' back' : '') });
     let pic;
     if (t === 's') { const p = h('div', { class: 'pic' }); p.innerHTML = `<svg viewBox="0 0 64 64">${portrait(id)}</svg>`; pic = p; }
-    else pic = h('div', { class: 'pic' }, t === 'w' ? D.weapon(id).icon : D.room(id).icon);
+    else if (t === 'w') { pic = h('div', { class: 'pic' }); pic.innerHTML = `<svg viewBox="0 0 64 64">${WSVG[id]}</svg>`; }
+    else pic = h('div', { class: 'pic' }, D.room(id).icon);
     const name = t === 's' ? D.suspect(id).name : t === 'w' ? D.weapon(id).name : D.room(id).name;
     e.append(h('div', { class: 'band' }, TYPE_LABEL[t]), pic, h('div', { class: 'nm' }, name));
     return e;
@@ -179,5 +198,5 @@
     };
     draw(); document.body.append(wrap); return close;
   };
-  window.UI = { rulesModal, h, avatar, portrait, card, die, toast, post, fmtTime, confetti };
+  window.UI = { weaponMarkup, weaponIcon, itemIcon, rulesModal, h, avatar, portrait, card, die, toast, post, fmtTime, confetti };
 })();

@@ -31,9 +31,9 @@
 
   // x,y,w,h in quadratini. floor = tipo di pavimento (per la grafica)
   const ROOMS = [
-    { id: 'cucina', num: 1, name: 'Cucina Infernale', sub: 'la cucina', icon: '🍳', floor: 'checker', x: 0, y: 0, w: 6, h: 5, doors: [[2, 5], [3, 5]] },
-    { id: 'lavaggio', num: 2, name: 'Lavatoio', sub: 'saletta dei piatti', icon: '🫧', floor: 'tiles', x: 6, y: 0, w: 4, h: 5, doors: [[7, 5], [8, 5]] },
-    { id: 'cucinaSuore', num: 3, name: 'Cucina delle Sorelle', sub: 'cucina delle suore', icon: '🥘', floor: 'checkerWarm', x: 10, y: 0, w: 8, h: 5, doors: [[13, 5], [14, 5]] },
+    { id: 'cucina', num: 1, name: 'Cucina Infernale', sub: 'la cucina', icon: '🔥', floor: 'checker', x: 0, y: 0, w: 6, h: 5, doors: [[2, 5], [3, 5]] },
+    { id: 'lavaggio', num: 2, name: 'Lavatoio', sub: 'saletta dei piatti', icon: '🍽️', floor: 'tiles', x: 6, y: 0, w: 4, h: 5, doors: [[7, 5], [8, 5]] },
+    { id: 'cucinaSuore', num: 3, name: 'Cucina delle Sorelle', sub: 'cucina delle suore', icon: '🍲', floor: 'checkerWarm', x: 10, y: 0, w: 8, h: 5, doors: [[13, 5], [14, 5]] },
     { id: 'pranzoSuore', num: 4, name: 'Refettorio Sacro', sub: 'pranzo delle suore', icon: '🍷', floor: 'woodDark', x: 18, y: 0, w: 7, h: 5, doors: [[20, 5], [21, 5]] },
     { id: 'pranzo', num: 5, name: 'Gran Refettorio', sub: 'sala da pranzo', icon: '🍝', floor: 'wood', x: 9, y: 7, w: 11, h: 10, doors: [[8, 11], [8, 12], [20, 11], [20, 12], [12, 6], [13, 6]] },
     { id: 'bagniProib', num: 7, name: 'Bagni proibiti', icon: '🚫', floor: 'tiles', x: 0, y: 7, w: 6, h: 3, doors: [[6, 8]] },
